@@ -67,7 +67,7 @@ build_master:
 deploy:
   stage: deploy
   variables:
-    APP_NAME: production-charges
+    APP_NAME: production-chargesV2
   environment:
     name: production/${CI_COMMIT_REF_SLUG}
     url: http://192.168.160.74:31633/${APP_NAME}/swagger
@@ -82,7 +82,7 @@ deploy:
 review:
   stage: deploy
   variables:
-    APP_NAME: review-charges
+    APP_NAME: review-chargesV2
   environment:
     name: review/${CI_COMMIT_REF_SLUG}
     url: http://192.168.160.74:31633/${APP_NAME}/swagger
@@ -101,7 +101,7 @@ stop_review:
     name: review/${CI_COMMIT_REF_SLUG}
     action: stop
   variables:
-    APP_NAME: review-charges
+    APP_NAME: review-chargesV2
     GIT_STRATEGY: none
   image: roffe/kubectl:v1.13.0
   script:
