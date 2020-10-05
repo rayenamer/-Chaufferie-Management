@@ -1,0 +1,63 @@
+kind: Service
+apiVersion: v1
+metadata:
+  namespace: gitlab-managed-apps
+  name: ${APP_NAME}
+spec:
+  selector:
+    app: ${APP_NAME}
+  type: ClusterIP
+  ports:
+     - protocol: TCP
+       port: 80
+       targetPort: 80
+---
+kind: Deployment
+apiVersion: apps/v1beta1
+metadata:
+  namespace: gitlab-managed-apps
+  name: ${APP_NAME}
+  labels:
+    app: ${APP_NAME}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ${APP_NAME}
+  template:
+    metadata:
+      labels:
+        app: ${APP_NAME}
+    spec:
+      imagePullSecrets:
+        - name: gitlab-auth
+      hostAliases:
+      - ip: 192.168.160.57
+        hostnames:
+        - db-service
+      containers:
+        - name: ${APP_NAME}
+          image: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHORT_SHA}
+          ports:
+            - containerPort: 80
+---
+apiVersion:  extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ${APP_NAME}
+  namespace: gitlab-managed-apps 
+  annotations:
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "PUT, GET, POST, DELETE, OPTIONS"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "*"
+    nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /${APP_NAME}
+        backend:
+          serviceName: ${APP_NAME}
+          servicePort: 80

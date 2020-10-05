@@ -1,0 +1,113 @@
+image:
+  name: mcr.microsoft.com/dotnet/core/sdk:3.1-bionic
+
+stages:
+  - test
+  - build
+  - deploy
+
+.test:
+  stage: test
+  before_script:
+    - cd GestionUtilisateur.UnitTest
+  script:
+    - dotnet restore
+    - dotnet test
+
+.compile:
+  stage: build
+  script:
+    - cd Chaufferie.Api
+    - dotnet restore
+    - dotnet build
+
+build_dev:
+  stage: build
+  image:
+    name: docker:latest
+  variables:
+    DOCKER_HOST: tcp://localhost:2375
+    DOCKER_TLS_CERTDIR: ""
+  services:
+    - docker:dind
+  script:
+    - export DOCKER_HOST=tcp://192.168.160.96:2375
+    - export DOCKER_API_VERSION=1.39
+    - docker info
+    - docker login -u "${CI_REGISTRY_USER}" -p "${CI_REGISTRY_PASSWORD}" "${CI_REGISTRY}"
+    - docker build -t "${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHORT_SHA}" .
+    #    - docker tag "${CI_REGISTRY_IMAGE}:latest" "${CI_REGISTRY_IMAGE}:1.5"
+    #    - test ! -z "${CI_COMMIT_TAG}" && docker push "${CI_REGISTRY_IMAGE}:1.5"
+    - docker push "${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHORT_SHA}"
+  only:
+    - dev
+
+build_master:
+  stage: build
+  image:
+    name: docker:latest
+  variables:
+    DOCKER_HOST: tcp://localhost:2375
+    DOCKER_TLS_CERTDIR: ""
+  services:
+    - docker:dind
+  script:
+    - export DOCKER_HOST=tcp://192.168.160.96:2375
+    - export DOCKER_API_VERSION=1.39
+    - docker info
+    - docker login -u "${CI_REGISTRY_USER}" -p "${CI_REGISTRY_PASSWORD}" "${CI_REGISTRY}"
+    - docker build -t "${CI_REGISTRY_IMAGE}:latest" .
+    - docker tag "${CI_REGISTRY_IMAGE}:latest" "${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHORT_SHA}"
+    #    - test ! -z "${CI_COMMIT_TAG}" && docker push "${CI_REGISTRY_IMAGE}:1.5"
+    - docker push "${CI_REGISTRY_IMAGE}:latest"
+    - docker push "${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHORT_SHA}"
+  only:
+    - master
+
+deploy:
+  stage: deploy
+  variables:
+    APP_NAME: production-charges
+  environment:
+    name: production/${CI_COMMIT_REF_SLUG}
+    url: http://192.168.160.74:31633/${APP_NAME}/swagger
+
+  image: roffe/kubectl:v1.13.0
+  script:
+    - kubectl delete --ignore-not-found=true secret gitlab-auth --kubeconfig=$CONF --namespace=gitlab-managed-apps
+    - kubectl create secret docker-registry gitlab-auth --docker-server=$CI_REGISTRY --docker-username=$USER --docker-password=$PASSWORD --kubeconfig=$CONF --namespace=gitlab-managed-apps
+    - cat k8s.yaml | envsubst | kubectl apply -f - --kubeconfig=$CONF
+  only:
+    - master
+review:
+  stage: deploy
+  variables:
+    APP_NAME: review-charges
+  environment:
+    name: review/${CI_COMMIT_REF_SLUG}
+    url: http://192.168.160.74:31633/${APP_NAME}/swagger
+    on_stop: stop_review
+
+  image: roffe/kubectl:v1.13.0
+  script:
+    - kubectl delete --ignore-not-found=true secret gitlab-auth --kubeconfig=$CONF --namespace=gitlab-managed-apps
+    - kubectl create secret docker-registry gitlab-auth --docker-server=$CI_REGISTRY --docker-username=$USER --docker-password=$PASSWORD --kubeconfig=$CONF   --namespace=gitlab-managed-apps
+    - cat k8s.yaml | envsubst | kubectl apply -f - --kubeconfig=$CONF
+  only:
+    - dev
+stop_review:
+  stage: deploy
+  environment:
+    name: review/${CI_COMMIT_REF_SLUG}
+    action: stop
+  variables:
+    APP_NAME: review-charges
+    GIT_STRATEGY: none
+  image: roffe/kubectl:v1.13.0
+  script:
+    - kubectl delete service/${APP_NAME} --namespace=gitlab-managed-apps --kubeconfig=$CONF
+    - kubectl delete deploy/${APP_NAME} --namespace=gitlab-managed-apps --kubeconfig=$CONF
+    - kubectl delete ingress/${APP_NAME} --namespace=gitlab-managed-apps --kubeconfig=$CONF
+  when: manual
+  only:
+    - dev
