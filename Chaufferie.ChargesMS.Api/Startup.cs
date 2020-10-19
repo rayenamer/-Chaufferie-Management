@@ -67,7 +67,7 @@ namespace Chaufferie.ChargesMS.Api
             services.AddHttpClient("ChaudiereMsClient", client =>
             {
                 //  client.BaseAddress = new Uri("https://localhost:44352/api/");
-                client.BaseAddress = new Uri("http://192.168.160.74:31633/review-chaudiere/api/");
+                client.BaseAddress = new Uri("http://192.168.160.74:31633/production-chaudiere/api/");
 
             })
             .AddTransientHttpErrorPolicy(x =>

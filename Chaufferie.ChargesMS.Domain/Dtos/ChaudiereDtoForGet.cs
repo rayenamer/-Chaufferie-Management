@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -16,7 +16,7 @@ namespace Chaufferie.ChargesMS.Domain.Dtos
             public int Numero { get; set; }
             public string Unite { get; set; }
             public string Filiale { get; set; }
-            public DateTime DateFabrication { get; set; }
+            public int DateFabrication { get; set; }
             public decimal? Capacite { get; set; }
             public decimal PressionService { get; set; }
             public TypeCombustible TypeCombustible { get; set; }
