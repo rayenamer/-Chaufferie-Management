@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -63,14 +63,17 @@ namespace Chaufferie.ChargesMS.Api.Controllers
             }
             else if (ChElectrique.typeCalculConsommation.Equals(TypeCalcul.theorique))
             {
+                                var date = ChElectrique.Date.ToString("yyyy-MM-dd");
+                var consommationEau = await ficheSuiviRepository.GetSumConsommationEau(ChElectrique.FkSubsidiary, date);
+                var productionVapeur = await ficheSuiviRepository.GetSumConsommationVapeur(ChElectrique.FkSubsidiary, date);
                 var Chaudiere = (await chaudiereRepository.GetChaudiereDtoForGet(ChElectrique.FkSubsidiary)).Where(x=>x.Type.Equals(ChaudiereType.Principale)).LastOrDefault();
                 if (Chaudiere!=null)
                 {
                     var Bruleur = (await chaudiereRepository.GetBruleurByChaudiereId(Chaudiere.ChaudiereId)).Where(x => x.Etat.Equals(EtatComposant.Marche)).LastOrDefault();
                     var PompeAlimentaire = (await chaudiereRepository.GetPompeAlimentaireByChaudiereId(Chaudiere.ChaudiereId)).Where(x => x.Etat.Equals(EtatComposant.Marche)).LastOrDefault();
                     var Adoucisseur = (await chaudiereRepository.GetAdoucisseurList(ChElectrique.FkSubsidiary)).Where(x => x.Etat.Equals(EtatComposant.Marche)).LastOrDefault();
-                    var quantiteConsommeParPompeAlimentaire = ChElectrique.quantiteEauConsommee * PompeAlimentaire.PuissanceElectrique / Adoucisseur.DebitUtilisation;
-                    var quantiteConsommeParBruleur = ChElectrique.quantiteVapeurProduite * Bruleur.PuissanceElectrique / Chaudiere.Capacite;
+                    var quantiteConsommeParPompeAlimentaire = consommationEau * PompeAlimentaire.PuissanceElectrique / Adoucisseur.DebitUtilisation;
+                    var quantiteConsommeParBruleur = productionVapeur * Bruleur.PuissanceElectrique / Chaudiere.Capacite;
 
                     ChElectrique.QuantiteConsomme = (decimal)quantiteConsommeParPompeAlimentaire + (decimal)quantiteConsommeParBruleur;
                 }
@@ -95,14 +98,17 @@ namespace Chaufferie.ChargesMS.Api.Controllers
             }
             else if (ChElectrique.typeCalculConsommation.Equals(TypeCalcul.theorique))
             {
+               var date = ChElectrique.Date.ToString("yyyy-MM-dd");
+                var consommationEau = await ficheSuiviRepository.GetSumConsommationEau(ChElectrique.FkSubsidiary, date);
+                var productionVapeur = await ficheSuiviRepository.GetSumConsommationVapeur(ChElectrique.FkSubsidiary, date);
                 var Chaudiere = (await chaudiereRepository.GetChaudiereDtoForGet(ChElectrique.FkSubsidiary)).Where(x => x.Type.Equals(ChaudiereType.Principale)).LastOrDefault();
                 if (Chaudiere != null)
                 {
                     var Bruleur = (await chaudiereRepository.GetBruleurByChaudiereId(Chaudiere.ChaudiereId)).Where(x => x.Etat.Equals(EtatComposant.Marche)).LastOrDefault();
                     var PompeAlimentaire = (await chaudiereRepository.GetPompeAlimentaireByChaudiereId(Chaudiere.ChaudiereId)).Where(x => x.Etat.Equals(EtatComposant.Marche)).LastOrDefault();
                     var Adoucisseur = (await chaudiereRepository.GetAdoucisseurList(ChElectrique.FkSubsidiary)).Where(x => x.Etat.Equals(EtatComposant.Marche)).LastOrDefault();
-                    var quantiteConsommeParPompeAlimentaire = ChElectrique.quantiteEauConsommee * PompeAlimentaire.PuissanceElectrique / Adoucisseur.DebitUtilisation;
-                    var quantiteConsommeParBruleur = ChElectrique.quantiteVapeurProduite * Bruleur.PuissanceElectrique / Chaudiere.Capacite;
+                    var quantiteConsommeParPompeAlimentaire = consommationEau * PompeAlimentaire.PuissanceElectrique / Adoucisseur.DebitUtilisation;
+                    var quantiteConsommeParBruleur = productionVapeur * Bruleur.PuissanceElectrique / Chaudiere.Capacite;
 
                     ChElectrique.QuantiteConsomme = (decimal)quantiteConsommeParPompeAlimentaire + (decimal)quantiteConsommeParBruleur;
                 }
