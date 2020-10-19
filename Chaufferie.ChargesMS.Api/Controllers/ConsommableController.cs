@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -83,9 +83,14 @@ namespace Chaufferie.ChargesMS.Api.Controllers
                includes: src => src.Include(x => x.Filiale).Include(x => x.TypeConsommable)), new CancellationToken())).Select(data => mapper.Map<ConsommableDto>(data));
             ConsommableDtoWithTotal ConsommableDtoWithTotal = new ConsommableDtoWithTotal();
             ConsommableDtoWithTotal.TotalCharges = 0;
+            ConsommableDtoWithTotal.TotalChargesProduitsChimiques = 0;
             ConsommableDtoWithTotal.ListConsommable = new List<ConsommableDto>();
             foreach (ConsommableDto consommable in ListConsommable)
             {
+                 if (consommable.TypeConsommable.Equals("Produit chimique"))
+                {
+                    ConsommableDtoWithTotal.TotalChargesProduitsChimiques+= (consommable.PrixUnitaire * consommable.Consommation);
+                }
                 ConsommableDtoWithTotal.TotalCharges += (consommable.PrixUnitaire * consommable.Consommation);
                 ConsommableDtoWithTotal.ListConsommable.Add(consommable);
             }

@@ -1,4 +1,4 @@
-﻿using Chaufferie.ChargesMS.Domain.Dtos;
+using Chaufferie.ChargesMS.Domain.Dtos;
 using Chaufferie.ChargesMS.Domain.Models;
 using System;
 using System.Collections.Generic;
@@ -77,6 +77,24 @@ namespace Chaufferie.ChargeMS.Data.Repository
         {
             var httpClient = _httpClientFactory.CreateClient("FicheSuiviMsClient");
             var response = await httpClient.GetAsync($"FSVapeur/GetSumConsommationEau?FkSubsidiary=" + FkSusbsidiary + "&date=" + date);
+            string responseStream = response.Content.ReadAsStringAsync().Result;
+
+            try
+            {
+                var Consommation = Newtonsoft.Json.JsonConvert.DeserializeObject<int?>(responseStream);
+
+                return await Task.FromResult(Consommation);
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
+
+                public async Task<int?> GetSumConsommationVapeur(Guid FkSusbsidiary, string date)
+        {
+            var httpClient = _httpClientFactory.CreateClient("FicheSuiviMsClient");
+            var response = await httpClient.GetAsync($"FSVapeur/GetSumConsommationVapeur?FkSubsidiary=" + FkSusbsidiary + "&date=" + date);
             string responseStream = response.Content.ReadAsStringAsync().Result;
 
             try

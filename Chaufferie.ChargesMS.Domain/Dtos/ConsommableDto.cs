@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -27,5 +27,6 @@ namespace Chaufferie.ChargesMS.Domain.Dtos
     {
         public List<ConsommableDto> ListConsommable { get; set; }
         public decimal TotalCharges { get; set; }
+         public decimal TotalChargesProduitsChimiques { get; set; }
     }
 }
