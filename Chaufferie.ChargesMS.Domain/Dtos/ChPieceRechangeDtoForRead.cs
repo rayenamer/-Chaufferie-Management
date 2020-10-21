@@ -14,5 +14,7 @@ namespace Chaufferie.ChargesMS.Domain.Dtos
         public DateTime Date { get; set; }
         public Guid FkSubsidiary { get; set; }
         public string SubsidiaryLabel { get; set; }
+        public string FilePath { get; set; }
+        public string FileName { get; set; }
     }
 }
