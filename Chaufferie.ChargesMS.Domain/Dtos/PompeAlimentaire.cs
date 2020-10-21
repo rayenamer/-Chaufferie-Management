@@ -12,5 +12,6 @@ namespace Chaufferie.ChargesMS.Domain.Dtos
         public EtatComposant Etat { get; set; }
         public Guid ChaudiereId { get; set; }
         public decimal PuissanceElectrique { get; set; }
+        public decimal Debit { get; set; }
     }
 }
