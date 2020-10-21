@@ -17,5 +17,7 @@ namespace Chaufferie.ChargesMS.Domain.Models
         public virtual Filiale Filiale { get; set; }
         public DateTime Date { get; set; }
         //PJ
+        public string FilePath { get; set; }
+        public string FileName { get; set; }
     }
 }
