@@ -19,6 +19,8 @@ namespace Chaufferie.ChargesMS.Domain.Models
         public Guid FkSubsidiary{ get; set; }
         public virtual Filiale Filiale { get; set; }
         //PJ
+        public string FilePath { get; set; }
+        public string FileName { get; set; }
 
     }
 }
