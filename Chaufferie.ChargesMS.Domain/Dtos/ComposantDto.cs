@@ -14,5 +14,7 @@ namespace Chaufferie.ChargesMS.Domain.Dtos
         public decimal PrixAcquisition { get; set; }
         public int DureeAmortissement { get; set; }
         public Guid subsidiaryId { get; set; }
+        public DateTime EcheanceFinAmortissement { get; set; }
+        public decimal MontantMensuel { get; set; }
     }
 }
