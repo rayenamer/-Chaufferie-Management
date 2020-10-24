@@ -4,14 +4,16 @@ using Chaufferie.ChargeMS.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Chaufferie.ChargeMS.Data.Migrations
 {
     [DbContext(typeof(ChargesContext))]
-    partial class ChargesContextModelSnapshot : ModelSnapshot
+    [Migration("20201024135658_matriculeUser")]
+    partial class matriculeUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -93,7 +95,7 @@ namespace Chaufferie.ChargeMS.Data.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("PrixUnitaire")
-                        .HasColumnType("decimal(18, 6)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("QuantiteConsomme")
                         .HasColumnType("decimal(18,2)");
@@ -118,7 +120,7 @@ namespace Chaufferie.ChargeMS.Data.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("PrixUnitaire")
-                        .HasColumnType("decimal(18, 6)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<bool>("PrixUnitaireOsmose")
                         .HasColumnType("bit");
@@ -146,7 +148,7 @@ namespace Chaufferie.ChargeMS.Data.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("PrixUnitaire")
-                        .HasColumnType("decimal(18, 6)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("QuantiteConsomme")
                         .HasColumnType("decimal(18,2)");
@@ -257,7 +259,7 @@ namespace Chaufferie.ChargeMS.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("PrixUnitaire")
-                        .HasColumnType("decimal(18, 6)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Reference")
                         .HasColumnType("nvarchar(max)");
