@@ -63,7 +63,7 @@ namespace Chaufferie.ChargesMS.Api.Controllers
             ChPersonnelDtoForReadWithTotal chPersonnelDtoForReadWithTotal = new ChPersonnelDtoForReadWithTotal();
             chPersonnelDtoForReadWithTotal.TotalCharges = 0;
             chPersonnelDtoForReadWithTotal.ListChPersonnel = new List<ChPersonnelDtoForRead>();
-            IEnumerable<UserDto> ListUser = userRepostiory.GetListUser(FkSubsidiary).Result;
+            IEnumerable<UserDto> ListUser = userRepostiory.GetListUserByMatricule(ListchPersonnel.Select(x=>x.Matricule).Distinct().ToList()).Result;
             foreach (ChPersonnelDtoForRead chPersonnel  in ListchPersonnel)
             {
                 UserDto user = ListUser.Where(x => x.UserID == chPersonnel.FkUser).FirstOrDefault();
