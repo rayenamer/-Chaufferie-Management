@@ -58,11 +58,16 @@ namespace Chaufferie.ChargeMS.Data.Context
             .WithMany(e => e.Consommables)
             .HasForeignKey(e => e.FkSubsidiary);
 
+            modelBuilder.Entity<Consommable>()
+                .Property(p => p.PrixUnitaire).HasColumnType("decimal(18, 6)");
+
             modelBuilder.Entity<ChEau>()
                .HasOne(e => e.Filiale)
                .WithMany(e => e.ChConsommationsEau)
                .HasForeignKey(e => e.FkSubsidiary);
 
+            modelBuilder.Entity<ChEau>()
+                .Property(p => p.PrixUnitaire).HasColumnType("decimal(18, 6)");
 
             modelBuilder.Entity<ChAssistExterne>()
             .Property(p => p.SousTraitant)
@@ -73,10 +78,16 @@ namespace Chaufferie.ChargeMS.Data.Context
                .WithMany(e => e.ChCombustibles)
                .HasForeignKey(e => e.FkSubsidiary);
 
+            modelBuilder.Entity<ChCombustible>()
+                 .Property(p => p.PrixUnitaire).HasColumnType("decimal(18, 6)");
+
             modelBuilder.Entity<ChElectrique>()
               .HasOne(e => e.Filiale)
               .WithMany(e => e.ChElectriques)
               .HasForeignKey(e => e.FkSubsidiary);
+
+            modelBuilder.Entity<ChElectrique>()
+                .Property(p => p.PrixUnitaire).HasColumnType("decimal(18, 6)");
         }
 
 
