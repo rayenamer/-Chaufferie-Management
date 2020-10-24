@@ -15,5 +15,6 @@ namespace Chaufferie.ChargesMS.Domain.Dtos
         public string SubsidiaryLabel { get; set; }
         public decimal ChargeMensuelleParPers { get; set; }
         public DateTime Date { get; set; }
+        public string Matricule { get; set; }
     }
 }
