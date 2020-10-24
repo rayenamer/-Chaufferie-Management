@@ -67,7 +67,7 @@ namespace Chaufferie.ChargesMS.Api.Controllers
             foreach (ChPersonnelDtoForRead chPersonnel  in ListchPersonnel)
             {
                 UserDto user = ListUser.Where(x => x.UserID == chPersonnel.FkUser).FirstOrDefault();
-                chPersonnel.NomPersonnel = user.FullName;
+                chPersonnel.NomPersonnel = user.FullName;  
                 chPersonnel.ChargeMensuelleParPers = (chPersonnel.Salaire * chPersonnel.TauxOccupation)/100;
                 chPersonnelDtoForReadWithTotal.TotalCharges += chPersonnel.ChargeMensuelleParPers;
                 chPersonnelDtoForReadWithTotal.ListChPersonnel.Add(chPersonnel);
