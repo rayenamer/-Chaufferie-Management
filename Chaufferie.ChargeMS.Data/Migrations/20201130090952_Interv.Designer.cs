@@ -4,14 +4,16 @@ using Chaufferie.ChargeMS.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Chaufferie.ChargeMS.Data.Migrations
 {
     [DbContext(typeof(ChargesContext))]
-    partial class ChargesContextModelSnapshot : ModelSnapshot
+    [Migration("20201130090952_Interv")]
+    partial class Interv
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -54,6 +56,9 @@ namespace Chaufferie.ChargeMS.Data.Migrations
                     b.Property<Guid>("FkSubsidiary")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid>("FkTypeIntervention")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Intervention")
                         .HasColumnType("nvarchar(max)");
 
@@ -68,6 +73,8 @@ namespace Chaufferie.ChargeMS.Data.Migrations
                     b.HasIndex("FkBureauControle");
 
                     b.HasIndex("FkSubsidiary");
+
+                    b.HasIndex("FkTypeIntervention");
 
                     b.ToTable("ChAssistExeternes");
                 });
@@ -318,6 +325,20 @@ namespace Chaufferie.ChargeMS.Data.Migrations
                     b.ToTable("TypeConsommables");
                 });
 
+            modelBuilder.Entity("Chaufferie.ChargesMS.Domain.Models.TypeIntervention", b =>
+                {
+                    b.Property<Guid>("TypeInterventionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Libelle")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("TypeInterventionId");
+
+                    b.ToTable("TypeInterventions");
+                });
+
             modelBuilder.Entity("Chaufferie.ChargesMS.Domain.Models.ChAssistExterne", b =>
                 {
                     b.HasOne("Chaufferie.ChargesMS.Domain.Models.BureauControle", "BureauControle")
@@ -327,6 +348,12 @@ namespace Chaufferie.ChargeMS.Data.Migrations
                     b.HasOne("Chaufferie.ChargesMS.Domain.Models.Filiale", "Filiale")
                         .WithMany("ChAssistExeternes")
                         .HasForeignKey("FkSubsidiary")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Chaufferie.ChargesMS.Domain.Models.TypeIntervention", "TypeIntervention")
+                        .WithMany("ChAssistExeternes")
+                        .HasForeignKey("FkTypeIntervention")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

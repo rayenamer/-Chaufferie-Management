@@ -14,7 +14,7 @@ namespace Chaufferie.ChargesMS.Api.Mapper
         {
             #region Map Charges AssistExterne
             CreateMap<ChAssistExterne, ChAssistExterneDtoForRead>()
-                        .ForMember(m => m.LibelleTypeIntervention, i => i.MapFrom(src => src.TypeIntervention.Libelle))
+                        //.ForMember(m => m.LibelleTypeIntervention, i => i.MapFrom(src => src.TypeIntervention.Libelle))
                         .ForMember(m => m.LibelleBureauControle, i => i.MapFrom(src => src.BureauControle.Libelle))
                         .ForMember(m => m.SubsidiaryLabel, i => i.MapFrom(src => src.Filiale.label))
                         .ReverseMap();

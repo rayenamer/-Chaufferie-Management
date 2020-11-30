@@ -15,7 +15,7 @@ namespace Chaufferie.ChargesMS.Infra.IoC
             services.AddTransient<IGenericRepository<BureauControle>, GenericRepository<BureauControle>>();
             services.AddTransient<IGenericRepository<ChPieceRechange>, GenericRepository<ChPieceRechange>>();
             services.AddTransient<IGenericRepository<ChPersonnel>, GenericRepository<ChPersonnel>>();
-            services.AddTransient<IGenericRepository<TypeIntervention>, GenericRepository<TypeIntervention>>();
+           // services.AddTransient<IGenericRepository<TypeIntervention>, GenericRepository<TypeIntervention>>();
             services.AddTransient<IGenericRepository<Filiale>, GenericRepository<Filiale>>();
             services.AddTransient<IGenericRepository<Consommable>, GenericRepository<Consommable>>();
             services.AddTransient<IGenericRepository<TypeConsommable>, GenericRepository<TypeConsommable>>();

@@ -9,8 +9,9 @@ namespace Chaufferie.ChargesMS.Domain.Dtos
         public Guid ChAssistExterneId { get; set; }
         public decimal Montant { get; set; }
         public string SousTraitant { get; set; }
-        public Guid FkTypeIntervention { get; set; }
-        public string LibelleTypeIntervention { get; set; }
+        public string Intervention { get; set; }
+        //public Guid FkTypeIntervention { get; set; }
+        //public string LibelleTypeIntervention { get; set; }
         public Guid? FkBureauControle { get; set; }
         public string LibelleBureauControle { get; set; }
         public DateTime Date { get; set; }
