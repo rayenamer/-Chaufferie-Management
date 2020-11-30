@@ -12,8 +12,9 @@ namespace Chaufferie.ChargesMS.Domain.Models
         public decimal Montant { get; set; }
         public DateTime Date { get; set; }
         public string SousTraitant { get; set; }
-        public Guid FkTypeIntervention { get; set; }
-        public virtual TypeIntervention TypeIntervention { get; set; }
+        public string Intervention { get; set; }
+        //public Guid FkTypeIntervention { get; set; }
+        //public virtual TypeIntervention TypeIntervention { get; set; }
         public Guid? FkBureauControle { get; set; }
         public virtual BureauControle BureauControle  { get; set; }
         public Guid FkSubsidiary{ get; set; }
