@@ -16,7 +16,7 @@ namespace Chaufferie.ChargeMS.Data.Context
         public DbSet<Filiale> Filiales { get; set; }
         public DbSet<ChPersonnel> ChPersonnels { get; set; }
         public DbSet<ChAssistExterne> ChAssistExeternes { get; set; }
-        public DbSet<TypeIntervention> TypeInterventions { get; set; }
+       // public DbSet<TypeIntervention> TypeInterventions { get; set; }
         public DbSet<BureauControle> BureauControles { get; set; }
         public DbSet<ChPieceRechange> ChPieceRechanges { get; set; }
         public DbSet<Consommable> Consommables { get; set; }
@@ -38,10 +38,10 @@ namespace Chaufferie.ChargeMS.Data.Context
                .WithMany(e => e.ChAssistExeternes)
                .HasForeignKey(e => e.FkSubsidiary);
 
-            modelBuilder.Entity<ChAssistExterne>()
-                .HasOne(e => e.TypeIntervention)
-                .WithMany(e => e.ChAssistExeternes)
-                .HasForeignKey(e => e.FkTypeIntervention);
+            //modelBuilder.Entity<ChAssistExterne>()
+            //    .HasOne(e => e.TypeIntervention)
+            //    .WithMany(e => e.ChAssistExeternes)
+            //    .HasForeignKey(e => e.FkTypeIntervention);
 
             modelBuilder.Entity<ChAssistExterne>()
                 .HasOne(e => e.BureauControle)

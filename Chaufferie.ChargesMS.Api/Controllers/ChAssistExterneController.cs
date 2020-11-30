@@ -58,7 +58,7 @@ namespace Chaufferie.ChargesMS.Api.Controllers
 
             IEnumerable<ChAssistExterneDtoForRead> ListChAssistExterne = (await (new GetListGenericHandler<ChAssistExterne>(repository)).Handle(new GetListGenericQuery<ChAssistExterne>(
                 condition: x => x.Date.Year.ToString() == annee && x.Date.Month.ToString() == mois && x.FkSubsidiary == FkSubsidiary,
-               includes: src => src.Include(x => x.Filiale).Include(x => x.BureauControle).Include(x => x.TypeIntervention)), new CancellationToken())).Select(data => mapper.Map<ChAssistExterneDtoForRead>(data));
+               includes: src => src.Include(x => x.Filiale).Include(x => x.BureauControle)), new CancellationToken())).Select(data => mapper.Map<ChAssistExterneDtoForRead>(data));
             ChAssistExterneDtoForReadWithTotal chAssistExterneDtoForReadWithTotal = new ChAssistExterneDtoForReadWithTotal();
             chAssistExterneDtoForReadWithTotal.TotalCharges = 0;
             chAssistExterneDtoForReadWithTotal.ListChAssistExterne = new List<ChAssistExterneDtoForRead>();
