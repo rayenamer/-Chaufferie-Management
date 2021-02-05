@@ -63,11 +63,11 @@ namespace Chaufferie.ChargesMS.Api.Controllers
             }
             else if (ChElectrique.typeCalculConsommation.Equals(TypeCalcul.theorique))
             {
-                                var date = ChElectrique.Date.ToString("yyyy-MM-dd");
+                var date = ChElectrique.Date.ToString("yyyy-MM-dd");
                 var consommationEau = await ficheSuiviRepository.GetSumConsommationEau(ChElectrique.FkSubsidiary, date);
                 var productionVapeur = await ficheSuiviRepository.GetSumConsommationVapeur(ChElectrique.FkSubsidiary, date);
-                var Chaudiere = (await chaudiereRepository.GetChaudiereDtoForGet(ChElectrique.FkSubsidiary)).Where(x=>x.Type.Equals(ChaudiereType.Principale)).LastOrDefault();
-                if (Chaudiere!=null)
+                var Chaudiere = (await chaudiereRepository.GetChaudiereDtoForGet(ChElectrique.FkSubsidiary)).Where(x => x.Type.Equals(ChaudiereType.Principale)).LastOrDefault();
+                if (Chaudiere != null)
                 {
                     var Bruleur = (await chaudiereRepository.GetBruleurByChaudiereId(Chaudiere.ChaudiereId)).Where(x => x.Etat.Equals(EtatComposant.Marche)).LastOrDefault();
                     var PompeAlimentaire = (await chaudiereRepository.GetPompeAlimentaireByChaudiereId(Chaudiere.ChaudiereId)).Where(x => x.Etat.Equals(EtatComposant.Marche)).LastOrDefault();
@@ -97,7 +97,7 @@ namespace Chaufferie.ChargesMS.Api.Controllers
             }
             else if (ChElectrique.typeCalculConsommation.Equals(TypeCalcul.theorique))
             {
-               var date = ChElectrique.Date.ToString("yyyy-MM-dd");
+                var date = ChElectrique.Date.ToString("yyyy-MM-dd");
                 var consommationEau = await ficheSuiviRepository.GetSumConsommationEau(ChElectrique.FkSubsidiary, date);
                 var productionVapeur = await ficheSuiviRepository.GetSumConsommationVapeur(ChElectrique.FkSubsidiary, date);
                 var Chaudiere = (await chaudiereRepository.GetChaudiereDtoForGet(ChElectrique.FkSubsidiary)).Where(x => x.Type.Equals(ChaudiereType.Principale)).LastOrDefault();
@@ -164,6 +164,32 @@ namespace Chaufferie.ChargesMS.Api.Controllers
             }
             int annee = DateTime.Now.Year;
             return annee + "-" + mois;
+        }
+
+
+        [HttpGet("UpdateListChElectriqueByMonthSubsidiary")]
+        public async Task<IEnumerable<ChElectrique>> UpdateListChElectriqueByMonthSubsidiary(string date, Guid FkSubsidiary)
+        {
+            string mois;
+            string annee = date.Remove(4);
+            int index = date.IndexOf('0', 5);
+            if (index == 5)
+            {
+                mois = date.Remove(0, 6);
+            }
+            else mois = date.Remove(0, 5);
+
+            IEnumerable<ChElectrique> ListChElectrique = (await (new GetListGenericHandler<ChElectrique>(repository)).Handle(new GetListGenericQuery<ChElectrique>(
+                condition: x => x.Date.Year.ToString() == annee && x.Date.Month.ToString() == mois && x.FkSubsidiary == FkSubsidiary,
+               includes: src => src.Include(x => x.Filiale)), new CancellationToken()));
+            foreach (var item in ListChElectrique)
+            {
+                await this.PutChElectrique(item);
+            }
+
+            return ListChElectrique;
+
+
         }
     }
 }
