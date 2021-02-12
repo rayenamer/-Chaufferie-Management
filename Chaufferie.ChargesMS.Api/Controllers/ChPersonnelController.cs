@@ -81,7 +81,9 @@ namespace Chaufferie.ChargesMS.Api.Controllers
         public async Task<ChPersonnelDtoForReadWithTotal> SynchChPersonnelByMonthSubsidiary(DateTime date, Guid FkSubsidiary)
         {
             IEnumerable<ChPersonnel> ListAncienchPersonnel = (await (new GetListGenericHandler<ChPersonnel>(repository)).Handle(new GetListGenericQuery<ChPersonnel>(condition: x => x.Date.Year == date.Year && x.Date.Month == date.Month && x.FkSubsidiary == FkSubsidiary, null), new CancellationToken()));
-            if(ListAncienchPersonnel.Count() != 0)
+            DateTime LastMonth = date.AddMonths(-1);
+            IEnumerable<ChPersonnel> ListNouvchPersonnel = (await (new GetListGenericHandler<ChPersonnel>(repository)).Handle(new GetListGenericQuery<ChPersonnel>(condition: x => x.Date.Year == LastMonth.Year && x.Date.Month == LastMonth.Month && x.FkSubsidiary == FkSubsidiary, null), new CancellationToken()));
+            if (ListAncienchPersonnel.Count() != 0 && ListNouvchPersonnel.Count() != 0)
             {
                 foreach (ChPersonnel element in ListAncienchPersonnel)
                 {
@@ -89,8 +91,7 @@ namespace Chaufferie.ChargesMS.Api.Controllers
                 }
             }
            
-            DateTime LastMonth = date.AddMonths(-1);
-            IEnumerable<ChPersonnel> ListNouvchPersonnel = (await (new GetListGenericHandler<ChPersonnel>(repository)).Handle(new GetListGenericQuery<ChPersonnel>(condition: x => x.Date.Year == LastMonth.Year && x.Date.Month == LastMonth.Month && x.FkSubsidiary == FkSubsidiary, null), new CancellationToken()));
+        
             //List<ChPersonnelDtoForReadWithTotal> List;
             if (ListNouvchPersonnel.Count() != 0)
             {
