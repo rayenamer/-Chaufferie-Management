@@ -167,19 +167,12 @@ namespace Chaufferie.ChargesMS.Api.Controllers
 
 
         [HttpGet("UpdateListChCombustibleByMonthSubsidiary")]
-        public async Task<IEnumerable<ChCombustible>> UpdateListChCombustibleByMonthSubsidiary(string date, Guid FkSubsidiary)
+        public async Task<IEnumerable<ChCombustible>> UpdateListChCombustibleByMonthSubsidiary(DateTime date, Guid FkSubsidiary)
         {
-            string mois;
-            string annee = date.Remove(4);
-            int index = date.IndexOf('0', 5);
-            if (index == 5)
-            {
-                mois = date.Remove(0, 6);
-            }
-            else mois = date.Remove(0, 5);
+
 
             IEnumerable<ChCombustible> ListChCombustible = (await (new GetListGenericHandler<ChCombustible>(repository)).Handle(new GetListGenericQuery<ChCombustible>(
-                condition: x => x.Date.Year.ToString() == annee && x.Date.Month.ToString() == mois && x.FkSubsidiary == FkSubsidiary,
+                condition: x => x.Date.Year == date.Year && x.Date.Month == date.Month && x.FkSubsidiary == FkSubsidiary,
                includes: src => src.Include(x => x.Filiale)), new CancellationToken()));
             foreach (var item in ListChCombustible)
             {
