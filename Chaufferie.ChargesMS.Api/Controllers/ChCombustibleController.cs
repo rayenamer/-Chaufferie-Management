@@ -58,7 +58,7 @@ namespace Chaufferie.ChargesMS.Api.Controllers
             var Chaudiere = (await chaudiereRepository.GetChaudiereDtoForGet(ChCombustible.FkSubsidiary)).Where(x => x.Type.Equals(ChaudiereType.Principale)).LastOrDefault();
             var date = ChCombustible.Date.ToString("yyyy-MM-dd");
             var consommation = await ficheSuiviRepository.GetSumConsommationGaz(ChCombustible.FkSubsidiary, date);
-            if (Chaudiere.TypeCombustible.Equals(TypeCombustible.Gaz)|| Chaudiere.TypeCombustible.Equals(TypeCombustible.AirChaud))
+            if (Chaudiere.TypeCombustible.Equals(TypeCombustible.Gaz) || Chaudiere.TypeCombustible.Equals(TypeCombustible.AirChaud))
             {
                 ChCombustible.QuantiteConsomme = (decimal)consommation * (decimal)ChCombustible.PCS * (decimal)ChCombustible.CoefficientDeCorrection;
             }
@@ -144,25 +144,51 @@ namespace Chaufferie.ChargesMS.Api.Controllers
         }
 
         [HttpGet("CheckTypeCombustible")]
-        public async Task<TypeCombustible> CheckTypeCombustible( Guid FilialeId)
+        public async Task<TypeCombustible> CheckTypeCombustible(Guid FilialeId)
         {
-           
-          
-          
+
+
+
 
             try
             {
                 var Chaudiere = (await chaudiereRepository.GetChaudiereDtoForGet(FilialeId)).Where(x => x.Type.Equals(ChaudiereType.Principale)).LastOrDefault();
-               
-                    return Chaudiere.TypeCombustible;
-                
+
+                return Chaudiere.TypeCombustible;
+
             }
             catch (Exception ex)
             {
 
                 throw ex;
             }
-            
+
+        }
+
+
+        [HttpGet("UpdateListChCombustibleByMonthSubsidiary")]
+        public async Task<IEnumerable<ChCombustible>> UpdateListChCombustibleByMonthSubsidiary(string date, Guid FkSubsidiary)
+        {
+            string mois;
+            string annee = date.Remove(4);
+            int index = date.IndexOf('0', 5);
+            if (index == 5)
+            {
+                mois = date.Remove(0, 6);
+            }
+            else mois = date.Remove(0, 5);
+
+            IEnumerable<ChCombustible> ListChCombustible = (await (new GetListGenericHandler<ChCombustible>(repository)).Handle(new GetListGenericQuery<ChCombustible>(
+                condition: x => x.Date.Year.ToString() == annee && x.Date.Month.ToString() == mois && x.FkSubsidiary == FkSubsidiary,
+               includes: src => src.Include(x => x.Filiale)), new CancellationToken()));
+            foreach (var item in ListChCombustible)
+            {
+                await this.PutChCombustible(item);
+            }
+
+            return ListChCombustible;
+
+
         }
     }
 }

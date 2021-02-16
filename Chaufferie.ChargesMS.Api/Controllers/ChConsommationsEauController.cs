@@ -35,7 +35,7 @@ namespace Chaufferie.ChargesMS.Api.Controllers
             this.mapper = mapper;
         }
         #endregion
-        
+
         #region Read Function
         // GET: api/ChEau
         [HttpGet("GetListChEau")]
@@ -78,8 +78,8 @@ namespace Chaufferie.ChargesMS.Api.Controllers
                 var prix = (await chaudiereRepository.GetPrixOsmose(month, year)).price;
                 chEau.PrixUnitaire = prix;
             }
- 
-            
+
+
             //DateTime MinDate = new DateTime(chEau.Date.Year, chEau.Date.Month, 1);
             //int days = DateTime.DaysInMonth(chEau.Date.Year, chEau.Date.Month);
             //DateTime MaxDate = MinDate.AddDays(days);
@@ -97,14 +97,14 @@ namespace Chaufferie.ChargesMS.Api.Controllers
             //    }
             //    i++;
             //} while (i < days);
-       
-         
+
+
             var command = new AddGenericCommand<ChEau>(chEau);
             var handler = new AddGenericHandler<ChEau>(repository);
             return await handler.Handle(command, new CancellationToken());
 
         }
-           
+
         #endregion
 
 
@@ -180,6 +180,31 @@ namespace Chaufferie.ChargesMS.Api.Controllers
             }
             int annee = DateTime.Now.Year;
             return annee + "-" + mois;
+        }
+
+        [HttpGet("UpdateListChEauByMonthSubsidiary")]
+        public async Task<IEnumerable<ChEau>> UpdateListChEauByMonthSubsidiary(string date, Guid FkSubsidiary)
+        {
+            string mois;
+            string annee = date.Remove(4);
+            int index = date.IndexOf('0', 5);
+            if (index == 5)
+            {
+                mois = date.Remove(0, 6);
+            }
+            else mois = date.Remove(0, 5);
+
+            IEnumerable<ChEau> ListChEau = (await (new GetListGenericHandler<ChEau>(repository)).Handle(new GetListGenericQuery<ChEau>(
+                condition: x => x.Date.Year.ToString() == annee && x.Date.Month.ToString() == mois && x.FkSubsidiary == FkSubsidiary,
+               includes: src => src.Include(x => x.Filiale)), new CancellationToken()));
+            foreach (var item in ListChEau)
+            {
+                await this.PutChEau(item);
+            }
+
+            return ListChEau;
+
+
         }
 
 
