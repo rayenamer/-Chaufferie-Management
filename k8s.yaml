@@ -32,7 +32,7 @@ spec:
       imagePullSecrets:
         - name: gitlab-auth
       hostAliases:
-      - ip: 192.168.160.57
+      - ip: 192.168.1.85
         hostnames:
         - db-service
       containers:
