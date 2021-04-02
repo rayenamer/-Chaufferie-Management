@@ -105,8 +105,8 @@ namespace Chaufferie.ChargesMS.Api.Controllers
                 {
                     var Bruleur = (await chaudiereRepository.GetBruleurByChaudiereId(Chaudiere.ChaudiereId)).Where(x => x.Etat.Equals(EtatComposant.Marche)).LastOrDefault();
                     var PompeAlimentaire = (await chaudiereRepository.GetPompeAlimentaireByChaudiereId(Chaudiere.ChaudiereId)).Where(x => x.Etat.Equals(EtatComposant.Marche)).LastOrDefault();
-                    var Adoucisseur = (await chaudiereRepository.GetAdoucisseurList(ChElectrique.FkSubsidiary)).Where(x => x.Etat.Equals(EtatComposant.Marche)).LastOrDefault();
-                    var quantiteConsommeParPompeAlimentaire = consommationEau * PompeAlimentaire.PuissanceElectrique / Adoucisseur.DebitUtilisation;
+                    //var Adoucisseur = (await chaudiereRepository.GetAdoucisseurList(ChElectrique.FkSubsidiary)).Where(x => x.Etat.Equals(EtatComposant.Marche)).LastOrDefault();
+                    var quantiteConsommeParPompeAlimentaire = consommationEau * PompeAlimentaire.PuissanceElectrique / PompeAlimentaire.Debit;
                     var quantiteConsommeParBruleur = productionVapeur * Bruleur.PuissanceElectrique / Chaudiere.Capacite;
 
                     ChElectrique.QuantiteConsomme = (decimal)quantiteConsommeParPompeAlimentaire + (decimal)quantiteConsommeParBruleur;
