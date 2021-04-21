@@ -66,8 +66,11 @@ namespace Chaufferie.ChargesMS.Api.Controllers
             IEnumerable<UserDto> ListUser = userRepostiory.GetListUserByMatricule(ListchPersonnel.Select(x=>x.Matricule).Distinct().ToList()).Result;
             foreach (ChPersonnelDtoForRead chPersonnel  in ListchPersonnel)
             {
-                UserDto user = ListUser.Where(x => x.UserID == chPersonnel.FkUser).FirstOrDefault();
-                chPersonnel.NomPersonnel = user.FullName;  
+                UserDto user = ListUser.Where(x => x.Matricule == chPersonnel.Matricule).FirstOrDefault();
+                if(user != null)
+                {
+                    chPersonnel.NomPersonnel = user.FullName;
+                }
                 chPersonnel.ChargeMensuelleParPers = (chPersonnel.Salaire * chPersonnel.TauxOccupation)/100;
                 chPersonnelDtoForReadWithTotal.TotalCharges += chPersonnel.ChargeMensuelleParPers;
                 chPersonnelDtoForReadWithTotal.ListChPersonnel.Add(chPersonnel);
