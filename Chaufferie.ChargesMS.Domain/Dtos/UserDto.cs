@@ -9,5 +9,6 @@ namespace Chaufferie.ChargesMS.Domain.Dtos
         public Guid UserID { get; set; }
         public string FullName { get; set; }
         public Guid FK_Subsidiary { get; set; }
+        public string Matricule { get; set; }
     }
 }
