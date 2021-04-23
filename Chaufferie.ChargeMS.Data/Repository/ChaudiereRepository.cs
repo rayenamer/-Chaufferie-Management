@@ -163,6 +163,23 @@ namespace Chaufferie.ChargeMS.Data.Repository
         }
 
 
+        public async Task<string> GetTypeChaudiereByFilialeId(Guid filialeId)
+        {
+            var httpClient = _httpClientFactory.CreateClient("ChaudiereMsClient");
+            var response = await httpClient.GetAsync($"Chaudiere/GetTypeChaudiereByFilialeId?filialeId=" + filialeId);
+            string responseStream = response.Content.ReadAsStringAsync().Result;
+
+            try
+            {
+                var Type = responseStream;
+
+                return await Task.FromResult(Type);
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
 
     }
 }
