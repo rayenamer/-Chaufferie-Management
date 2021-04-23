@@ -68,9 +68,19 @@ namespace Chaufferie.ChargesMS.Api.Controllers
             //var CoutEau = BesoinEnEAUAdouc * chEau.PrixUnitaireEau;
             //var CoutTotal = CoutSel + CoutEau;
             //var CoutEauAdoucie = CoutTotal / (BesoinEnEAUAdouc - VolumeTotalEauRejet);
+          
             var date = chEau.Date.ToString("yyyy-MM-dd");
-            var consommation = await ficheSuiviRepository.GetSumConsommationEau(chEau.FkSubsidiary, date);
-            chEau.QuantiteConsomme = (decimal)consommation;
+
+            string type = this.chaudiereRepository.GetTypeChaudiereByFilialeId(chEau.FkSubsidiary).Result;
+            switch (type)
+            {
+                case "Récupération":
+                    chEau.QuantiteConsomme = (decimal)await ficheSuiviRepository.GetSumConsommationEauRecuperation(chEau.FkSubsidiary, date);
+                    break;
+                case "Vapeur":
+                    chEau.QuantiteConsomme = (decimal)await ficheSuiviRepository.GetSumConsommationEau(chEau.FkSubsidiary, date);
+                    break;
+            }
             if (chEau.PrixUnitaireOsmose == true)
             {
                 var year = date.Substring(0, 4);
@@ -120,8 +130,16 @@ namespace Chaufferie.ChargesMS.Api.Controllers
         public async Task<ChEau> PutChEau([FromBody] ChEau ChEau)
         {
             var date = ChEau.Date.ToString("yyyy-MM-dd");
-            var consommation = await ficheSuiviRepository.GetSumConsommationEau(ChEau.FkSubsidiary, date);
-            ChEau.QuantiteConsomme = (decimal)consommation;
+            string type = this.chaudiereRepository.GetTypeChaudiereByFilialeId(ChEau.FkSubsidiary).Result;
+            switch (type)
+            {
+                case "Récupération":
+                    ChEau.QuantiteConsomme = (decimal)await ficheSuiviRepository.GetSumConsommationEauRecuperation(ChEau.FkSubsidiary, date);
+                    break;
+                case "Vapeur":
+                    ChEau.QuantiteConsomme = (decimal)await ficheSuiviRepository.GetSumConsommationEau(ChEau.FkSubsidiary, date);
+                    break;
+            }
             if (ChEau.PrixUnitaireOsmose == true)
             {
                 ChEau.PrixUnitaire = 10;

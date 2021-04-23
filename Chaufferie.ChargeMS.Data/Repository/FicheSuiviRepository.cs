@@ -39,7 +39,7 @@ namespace Chaufferie.ChargeMS.Data.Repository
         public async Task<int?> GetSumConsommationGaz(Guid FkSusbsidiary, string date)
         {
             var httpClient = _httpClientFactory.CreateClient("FicheSuiviMsClient");
-            var response = await httpClient.GetAsync($"FSVapeur/GetSumConsommationGaz?FkSubsidiary=" + FkSusbsidiary+ "&date="+date);
+            var response = await httpClient.GetAsync($"FSVapeur/GetSumConsommationGaz?FkSubsidiary=" + FkSusbsidiary + "&date=" + date);
             string responseStream = response.Content.ReadAsStringAsync().Result;
 
             try
@@ -91,7 +91,7 @@ namespace Chaufferie.ChargeMS.Data.Repository
             }
         }
 
-                public async Task<int?> GetSumConsommationVapeur(Guid FkSusbsidiary, string date)
+        public async Task<int?> GetSumConsommationVapeur(Guid FkSusbsidiary, string date)
         {
             var httpClient = _httpClientFactory.CreateClient("FicheSuiviMsClient");
             var response = await httpClient.GetAsync($"FSVapeur/GetSumConsommationVapeur?FkSubsidiary=" + FkSusbsidiary + "&date=" + date);
@@ -109,7 +109,65 @@ namespace Chaufferie.ChargeMS.Data.Repository
             }
         }
 
-        
+
+
+
+        public async Task<int?> GetSumConsommationEauRecuperation(Guid FkSusbsidiary, string date)
+        {
+            var httpClient = _httpClientFactory.CreateClient("FicheSuiviMsClient");
+            var response = await httpClient.GetAsync($"FSRecuperation/GetSumConsommationEau?FkSubsidiary=" + FkSusbsidiary + "&date=" + date);
+            string responseStream = response.Content.ReadAsStringAsync().Result;
+
+            try
+            {
+                var Consommation = Newtonsoft.Json.JsonConvert.DeserializeObject<int?>(responseStream);
+
+                return await Task.FromResult(Consommation);
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
+
+
+        public async Task<int?> GetSumConsommationGazRecuperation(Guid FkSusbsidiary, string date)
+        {
+            var httpClient = _httpClientFactory.CreateClient("FicheSuiviMsClient");
+            var response = await httpClient.GetAsync($"FSRecuperation/GetSumConsommationGaz?FkSubsidiary=" + FkSusbsidiary + "&date=" + date);
+            string responseStream = response.Content.ReadAsStringAsync().Result;
+
+            try
+            {
+                var Consommation = Newtonsoft.Json.JsonConvert.DeserializeObject<int?>(responseStream);
+
+                return await Task.FromResult(Consommation);
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
+
+
+        public async Task<int?> GetSumConsommationVapeurRecuperation(Guid FkSusbsidiary, string date)
+        {
+            var httpClient = _httpClientFactory.CreateClient("FicheSuiviMsClient");
+            var response = await httpClient.GetAsync($"FSRecuperation/GetSumConsommationVapeur?FkSubsidiary=" + FkSusbsidiary + "&date=" + date);
+            string responseStream = response.Content.ReadAsStringAsync().Result;
+
+            try
+            {
+                var Consommation = Newtonsoft.Json.JsonConvert.DeserializeObject<int?>(responseStream);
+
+                return await Task.FromResult(Consommation);
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
+
     }
 }
 

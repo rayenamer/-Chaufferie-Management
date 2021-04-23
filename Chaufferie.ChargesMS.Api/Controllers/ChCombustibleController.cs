@@ -57,7 +57,17 @@ namespace Chaufferie.ChargesMS.Api.Controllers
         {
             var Chaudiere = (await chaudiereRepository.GetChaudiereDtoForGet(ChCombustible.FkSubsidiary)).Where(x => x.Type.Equals(ChaudiereType.Principale)).LastOrDefault();
             var date = ChCombustible.Date.ToString("yyyy-MM-dd");
-            var consommation = await ficheSuiviRepository.GetSumConsommationGaz(ChCombustible.FkSubsidiary, date);
+            string type = chaudiereRepository.GetTypeChaudiereByFilialeId(ChCombustible.FkSubsidiary).Result;
+            int? consommation = 0;
+            switch (type)
+            {
+                case "Vapeur":
+                    consommation = await ficheSuiviRepository.GetSumConsommationGaz(ChCombustible.FkSubsidiary, date);
+                    break;
+                case "Récupération":
+                    consommation = await ficheSuiviRepository.GetSumConsommationGazRecuperation(ChCombustible.FkSubsidiary, date);
+                    break;
+            }
             if (Chaudiere.TypeCombustible.Equals(TypeCombustible.Gaz) || Chaudiere.TypeCombustible.Equals(TypeCombustible.AirChaud))
             {
                 ChCombustible.QuantiteConsomme = (decimal)consommation * (decimal)ChCombustible.PCS * (decimal)ChCombustible.CoefficientDeCorrection;
@@ -80,7 +90,17 @@ namespace Chaufferie.ChargesMS.Api.Controllers
         {
             var Chaudiere = (await chaudiereRepository.GetChaudiereDtoForGet(ChCombustible.FkSubsidiary)).Where(x => x.Type.Equals(ChaudiereType.Principale)).LastOrDefault();
             var date = ChCombustible.Date.ToString("yyyy-MM-dd");
-            var consommation = await ficheSuiviRepository.GetSumConsommationGaz(ChCombustible.FkSubsidiary, date);
+            string type = chaudiereRepository.GetTypeChaudiereByFilialeId(ChCombustible.FkSubsidiary).Result;
+            int? consommation = 0;
+            switch (type)
+            {
+                case "Vapeur":
+                    consommation = await ficheSuiviRepository.GetSumConsommationGaz(ChCombustible.FkSubsidiary, date);
+                    break;
+                case "Récupération":
+                    consommation = await ficheSuiviRepository.GetSumConsommationGazRecuperation(ChCombustible.FkSubsidiary, date);
+                    break;
+            }
             if (Chaudiere.TypeCombustible.Equals(TypeCombustible.Gaz) || Chaudiere.TypeCombustible.Equals(TypeCombustible.AirChaud))
             {
                 ChCombustible.QuantiteConsomme = (decimal)consommation * ChCombustible.PCS * (decimal)ChCombustible.CoefficientDeCorrection;
