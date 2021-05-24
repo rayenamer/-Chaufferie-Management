@@ -119,18 +119,41 @@ namespace Chaufferie.ChargesMS.Api.Controllers
             else if (ChElectrique.typeCalculConsommation.Equals(TypeCalcul.theorique))
             {
                 var date = ChElectrique.Date.ToString("yyyy-MM-dd");
-                var consommationEau = await ficheSuiviRepository.GetSumConsommationEau(ChElectrique.FkSubsidiary, date);
-                var productionVapeur = await ficheSuiviRepository.GetSumConsommationVapeur(ChElectrique.FkSubsidiary, date);
+                int? consommationEau = 0;
+                int? productionVapeur = 0;
+                string type = chaudiereRepository.GetTypeChaudiereByFilialeId(ChElectrique.FkSubsidiary).Result;
                 var Chaudiere = (await chaudiereRepository.GetChaudiereDtoForGet(ChElectrique.FkSubsidiary)).Where(x => x.Type.Equals(ChaudiereType.Principale)).LastOrDefault();
                 if (Chaudiere != null)
                 {
-                    var Bruleur = (await chaudiereRepository.GetBruleurByChaudiereId(Chaudiere.ChaudiereId)).Where(x => x.Etat.Equals(EtatComposant.Marche)).LastOrDefault();
-                    var PompeAlimentaire = (await chaudiereRepository.GetPompeAlimentaireByChaudiereId(Chaudiere.ChaudiereId)).Where(x => x.Etat.Equals(EtatComposant.Marche)).LastOrDefault();
-                    //var Adoucisseur = (await chaudiereRepository.GetAdoucisseurList(ChElectrique.FkSubsidiary)).Where(x => x.Etat.Equals(EtatComposant.Marche)).LastOrDefault();
-                    var quantiteConsommeParPompeAlimentaire = consommationEau * PompeAlimentaire.PuissanceElectrique / PompeAlimentaire.Debit;
-                    var quantiteConsommeParBruleur = productionVapeur * Bruleur.PuissanceElectrique / Chaudiere.Capacite;
+                    switch (type)
+                    {
+                        case "Récupération":
+                            {
+                                consommationEau = await ficheSuiviRepository.GetSumConsommationEauRecuperation(ChElectrique.FkSubsidiary, date);
+                                productionVapeur = await ficheSuiviRepository.GetSumConsommationVapeurRecuperation(ChElectrique.FkSubsidiary, date);
+                                var PompeAlimentaire = (await chaudiereRepository.GetPompeAlimentaireByChaudiereId(Chaudiere.ChaudiereId)).Where(x => x.Etat.Equals(EtatComposant.Marche)).LastOrDefault();
+                                //var Adoucisseur = (await chaudiereRepository.GetAdoucisseurList(ChElectrique.FkSubsidiary)).Where(x => x.Etat.Equals(EtatComposant.Marche)).LastOrDefault();
+                                var quantiteConsommeParPompeAlimentaire = consommationEau * PompeAlimentaire.PuissanceElectrique / PompeAlimentaire.Debit;
 
-                    ChElectrique.QuantiteConsomme = (decimal)quantiteConsommeParPompeAlimentaire + (decimal)quantiteConsommeParBruleur;
+                                ChElectrique.QuantiteConsomme = (decimal)quantiteConsommeParPompeAlimentaire;
+                            }
+                            break;
+
+                        case "Vapeur":
+                            {
+                                consommationEau = await ficheSuiviRepository.GetSumConsommationEau(ChElectrique.FkSubsidiary, date);
+                                productionVapeur = await ficheSuiviRepository.GetSumConsommationVapeur(ChElectrique.FkSubsidiary, date);
+                                var Bruleur = (await chaudiereRepository.GetBruleurByChaudiereId(Chaudiere.ChaudiereId)).Where(x => x.Etat.Equals(EtatComposant.Marche)).LastOrDefault();
+                                var PompeAlimentaire = (await chaudiereRepository.GetPompeAlimentaireByChaudiereId(Chaudiere.ChaudiereId)).Where(x => x.Etat.Equals(EtatComposant.Marche)).LastOrDefault();
+                                //var Adoucisseur = (await chaudiereRepository.GetAdoucisseurList(ChElectrique.FkSubsidiary)).Where(x => x.Etat.Equals(EtatComposant.Marche)).LastOrDefault();
+                                var quantiteConsommeParPompeAlimentaire = consommationEau * PompeAlimentaire.PuissanceElectrique / PompeAlimentaire.Debit;
+                                var quantiteConsommeParBruleur = productionVapeur * Bruleur.PuissanceElectrique / Chaudiere.Capacite;
+
+                                ChElectrique.QuantiteConsomme = (decimal)quantiteConsommeParPompeAlimentaire + (decimal)quantiteConsommeParBruleur;
+                            }
+                            break;
+                    }
+                   
                 }
             }
             var command = new PutGenericCommand<ChElectrique>(ChElectrique);
@@ -175,16 +198,10 @@ namespace Chaufferie.ChargesMS.Api.Controllers
 
         }
 
-        [HttpGet("Date")]
-        public string GetDate()
+        [HttpGet("GetLastDateForCheck")]
+        public DateTime GetLastDateForCheck()
         {
-            string mois = DateTime.Now.Month.ToString();
-            if (mois.Length == 1)
-            {
-                mois = "0" + mois;
-            }
-            int annee = DateTime.Now.Year;
-            return annee + "-" + mois;
+            return DateTime.Today;
         }
 
 
