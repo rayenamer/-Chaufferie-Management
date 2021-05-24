@@ -72,5 +72,11 @@ namespace Chaufferie.ChargesMS.Api.Controllers
             return chAmortissement;
         }
 
+        [HttpGet("GetLastDateForCheck")]
+        public DateTime GetLastDateForCheck()
+        {
+            return DateTime.Today;
+        }
+
     }
 }

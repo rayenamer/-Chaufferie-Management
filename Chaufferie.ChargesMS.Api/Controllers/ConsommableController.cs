@@ -100,16 +100,10 @@ namespace Chaufferie.ChargesMS.Api.Controllers
 
         }
 
-        [HttpGet("Date")]
-        public string GetDate()
+        [HttpGet("GetLastDateForCheck")]
+        public DateTime GetLastDateForCheck()
         {
-            string mois = DateTime.Now.Month.ToString();
-            if (mois.Length == 1)
-            {
-                mois = "0" + mois;
-            }
-            int annee = DateTime.Now.Year;
-            return annee + "-" + mois;
+            return DateTime.Today;
         }
 
     }

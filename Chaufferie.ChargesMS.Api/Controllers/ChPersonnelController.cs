@@ -109,6 +109,14 @@ namespace Chaufferie.ChargesMS.Api.Controllers
             return List;
         }
 
+
+
+        [HttpGet("GetLastDateForCheck")]
+        public DateTime GetLastDateForCheck()
+        {
+            return DateTime.Today;
+        }
+
         #endregion
 
         #region Add Function
