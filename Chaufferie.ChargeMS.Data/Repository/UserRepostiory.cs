@@ -36,7 +36,8 @@ namespace Chaufferie.ChargeMS.Data.Repository
 
         public async Task<IEnumerable<UserDto>> GetListUserByMatricule(List<string> ListMatricules)
         {
-            UriBuilder baseUri = new UriBuilder("http://192.168.160.74:31633/production-user-management/api/user/GetUserByListMatricule");
+            //UriBuilder baseUri = new UriBuilder("http://192.168.49.175:31003/api/user/GetUserByListMatricule");
+            UriBuilder baseUri = new UriBuilder("http://192.168.160.57/production-user-management/api/user/GetUserByListMatricule");
             string queryToAppend = "ListMatricules=";
             foreach (string matricule in ListMatricules)
             {

@@ -9,7 +9,6 @@ namespace Chaufferie.ChargesMS.Domain.Interfaces
 {
     public interface IGenericRepository<TEntity> where TEntity : class
     {
-
         IEnumerable<TEntity> GetList(Expression<Func<TEntity, bool>> condition,
            Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includes);
         TEntity Get(Expression<Func<TEntity, bool>> condition,

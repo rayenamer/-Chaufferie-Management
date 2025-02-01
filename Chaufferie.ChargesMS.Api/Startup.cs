@@ -40,14 +40,24 @@ namespace Chaufferie.ChargesMS.Api
             //{
             //    c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             //});
+            //services.AddCors(options =>
+            //{
+            //    options.AddPolicy("ang",
+            //    builder =>
+            //    {
+            //        builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+            //    });
+            //});
+
             services.AddCors(options =>
             {
-                options.AddPolicy("ang",
-                builder =>
-                {
-                    builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
-                });
+                options.AddPolicy("CorsPolicy",
+                    builder => builder
+                   .AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader());
             });
+
 
             services.AddDbContext<ChargesContext>(opt =>
             {
@@ -66,8 +76,9 @@ namespace Chaufferie.ChargesMS.Api
             DependencyContainer.RegisterService(services);
             services.AddHttpClient("ChaudiereMsClient", client =>
             {
-                //  client.BaseAddress = new Uri("https://localhost:44352/api/");
-                client.BaseAddress = new Uri("http://192.168.160.74:31633/production-chaudiere/api/");
+                //client.BaseAddress = new Uri("https://localhost:44352/api/");
+                //client.BaseAddress = new Uri("http://192.168.160.74:31633/production-chaudiere/api/");
+                client.BaseAddress = new Uri("http://192.168.49.175:32005/api/");
 
             })
             .AddTransientHttpErrorPolicy(x =>
@@ -75,7 +86,8 @@ namespace Chaufferie.ChargesMS.Api
 
             services.AddHttpClient("UserMsClient", client =>
             {
-                client.BaseAddress = new Uri("http://192.168.160.74:31633/production-user-management/api/");
+                //client.BaseAddress = new Uri("http://192.168.160.74:31633/production-user-management/api/");
+                client.BaseAddress = new Uri("http://192.168.49.175:31003/api/");
 
             })
            .AddTransientHttpErrorPolicy(x =>
@@ -83,8 +95,9 @@ namespace Chaufferie.ChargesMS.Api
 
             services.AddHttpClient("FicheSuiviMsClient", client =>
             {
-                client.BaseAddress = new Uri("http://192.168.160.74:31633/production-fiche-suivi/api/");
-              //  client.BaseAddress = new Uri("http://localhost:50791/api/");
+                //client.BaseAddress = new Uri("http://192.168.160.74:31633/production-fiche-suivi/api/");
+                client.BaseAddress = new Uri("http://192.168.49.175:32008/api/");
+                //  client.BaseAddress = new Uri("http://localhost:50791/api/");
 
             })
            .AddTransientHttpErrorPolicy(x =>
@@ -116,24 +129,24 @@ namespace Chaufferie.ChargesMS.Api
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "ContractMS Microservice V1");
             });
             app.UseHttpsRedirection();
-            if (env.IsDevelopment())
-            {
-                //  app.UseCors(options => options.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
-                app.UseCors("ang");
-            }
+            //if (env.IsDevelopment())
+            //{
+            //    //  app.UseCors(options => options.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+            //    app.UseCors("ang");
+            //}
             
             app.UseRouting();
-
+            app.UseCors("CorsPolicy");
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
-            if (env.IsProduction())
-            {
-                app.UseCors("ang");
-            }
+            //if (env.IsProduction())
+            //{
+            //    app.UseCors("ang");
+            //}
           
         }
     }
