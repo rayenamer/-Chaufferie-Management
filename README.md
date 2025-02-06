@@ -1,6 +1,4 @@
-Here’s a clean and professional **README.md** file for your .NET 3.1 backend project using CQRS architecture. This README is structured to provide a clear overview of the project, its components, and how to set it up:
 
----
 
 # Chaufferie Charges Management System (CCMS)
 
@@ -177,11 +175,7 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ## 👨‍💻 **Author**
 
-**Your Name**  
-- GitHub: [@yourusername](https://github.com/yourusername)  
-- LinkedIn: [Your LinkedIn Profile](https://www.linkedin.com/in/yourprofile)  
-
----
+**Rayen Ameur**  
 
 Feel free to explore, contribute, and make this project even better! 🚀
 
