@@ -167,11 +167,6 @@ Contributions are welcome! If you'd like to contribute, please follow these step
 
 ---
 
-## 📄 **License**
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
----
 
 ## 👨‍💻 **Author**
 
@@ -179,6 +174,3 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 Feel free to explore, contribute, and make this project even better! 🚀
 
----
-
-This README is designed to be **clear, concise, and GitHub-friendly**. Let me know if you need further adjustments! 😊
